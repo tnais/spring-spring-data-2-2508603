@@ -1,8 +1,9 @@
 package com.example.university.domain;
 
 import org.springframework.beans.factory.annotation.Value;
-// invoke from /departments/{id}?projection=showChair
-//@Projection(name="showChair", types = {Department.class})
+import org.springframework.data.rest.core.config.Projection;
+
+@Projection(name="showChair", types = {Department.class})
 public interface ShowChair {
     String getName();
 
