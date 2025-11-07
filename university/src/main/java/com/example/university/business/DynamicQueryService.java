@@ -33,4 +33,7 @@ public class DynamicQueryService {
         return courses;
     }
 
+  public List<Course> filterByExample(CourseFilter filter) {
+    return courseRepo.findAll(filter.getExampleProbe());
+  }
 }
