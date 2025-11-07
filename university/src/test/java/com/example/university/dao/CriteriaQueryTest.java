@@ -4,12 +4,15 @@ import com.example.university.business.CourseFilter;
 import com.example.university.business.DynamicQueryService;
 import com.example.university.business.UniversityService;
 import com.example.university.domain.Department;
+import com.example.university.domain.Person;
 import com.example.university.domain.Staff;
 import com.example.university.repo.DepartmentRepo;
 import com.example.university.repo.StaffRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 
 import static com.example.university.business.CourseFilter.filterBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,8 +35,11 @@ public class CriteriaQueryTest {
     @Test
     void findByCriteria() {
         UniversityFactory.fillUniversity(universityService);
-        Department humanities = departmentRepo.findByName("Humanities").get();
-        Staff professorBlack = staffRepo.findByLastName("Black").stream().findFirst().get();
+        Department humanities = departmentRepo.findOne(Example.of(new Department("Humanities",null),
+          ExampleMatcher.matching().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.DEFAULT))).get();
+        Staff professorBlack = staffRepo.findAll(Example.of(new Staff(new Person(null,"Black")),
+          ExampleMatcher.matching().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.DEFAULT)))
+                                 .stream().findFirst().get();
 
         System.out.println('\n' + "*** All Humanities Courses");
         queryAndVerify(filterBy().department(humanities));
